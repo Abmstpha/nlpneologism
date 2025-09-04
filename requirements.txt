@@ -1,0 +1,9 @@
+torch
+transformers
+scikit-learn
+tqdm
+numpy
+jupyter
+wandb
+accelerate
+sentencepiece

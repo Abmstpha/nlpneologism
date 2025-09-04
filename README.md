@@ -1,13 +1,67 @@
 # Definition-to-Neologism Generation
 
-This project is inspired by the research of my professor, Paul Lerner, as outlined in his paper [Towards Machine Translation of Scientific Neologisms](https://aclanthology.org/2024.jeptalnrecital-taln.17/). While the paper itself is in French, an abstract in English provides insight into its objectives:
+This project implements definition-to-neologism generation using mT5 and ByT5 models, inspired by the research of Paul Lerner in his paper [Towards Machine Translation of Scientific Neologisms](https://aclanthology.org/2024.jeptalnrecital-taln.17/).
 
-> Scientific research continually discovers and invents new concepts, which are then referred to by new terms, neologisms, or neonyms in this context. As the vast majority of publications are written in English, disseminating this new knowledge in French often requires translating these terms, to avoid multiplying anglicisms that are less easily understood by the general public. We propose to explore this task using two thesauri, exploiting the definition of the term to translate it more accurately. To this end, we explore the capabilities of two large multilingual models, BLOOM and CroissantLLM, which can translate scientific terms to some extent. In particular, we show that they often use appropriate morphological procedures, but are limited by the segmentation into sub-lexical units. They are also biased by the frequency of term occurrences and surface similarities between English and French.
+## Overview
 
-For my task, I am focusing on the "DEF" setting, which simplifies the problem as follows: given a definition, the goal is to generate the term that corresponds to it. I will evaluate the generated outputs using Exact Match, meaning the generated term must exactly match the reference.
+The project focuses on the "DEF" setting: given a definition, generate the corresponding term. We compare two approaches:
+- **mT5**: A multilingual T5 model using BPE tokenization
+- **ByT5**: A byte-level T5 model using character-level tokenization
 
-For example:
+### Example
 - **Input**: "Having to do with the ability to transmit data in either direction."
-- **Expected Output**: "bidirectional."
+- **Expected Output**: "bidirectional"
 
-In this case, "bidirectional" is formed by prefixing "bi-" to "directional," itself derived by suffixing "-al" to "direction," which is present in the input definition. This project emphasizes understanding and modeling such morphological and linguistic patterns to achieve accurate term generation.
+## Project Structure
+
+```
+nlpneologism/
+├── src/                      # Source code
+│   ├── data_loader.py        # Data loading functions
+│   ├── dataset.py            # PyTorch dataset class
+│   └── train.py              # Training script
+├── notebooks/                # Jupyter notebooks
+│   └── Definition-to-Neologism.ipynb
+├── data/                     # Dataset storage (place termium.json here)
+├── models/                   # Trained model storage
+├── logs/                     # Training logs
+├── requirements.txt          # Python dependencies
+└── README.md                 # This file
+```
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Abmstpha/nlpneologism.git
+cd nlpneologism
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Download the TERMIUM dataset and place `termium.json` in the `data/` folder
+
+## Usage
+
+Run the training script:
+```bash
+cd src
+python train.py
+```
+
+## Dataset
+
+The project uses the TERMIUM dataset, which provides English definitions and corresponding terms.
+
+## Model Comparison
+
+### mT5 (Multilingual T5)
+- Uses BPE tokenization
+- Example: "bidirectional" → `['▁bi', 'direction', 'al']`
+
+### ByT5 (Byte-level T5)  
+- Uses character-level tokenization
+- Example: "bidirectional" → `['b', 'i', 'd', 'i', 'r', 'e', 'c', 't', 'i', 'o', 'n', 'a', 'l']`
